@@ -4,7 +4,6 @@ spring:
   application:
     name: seata-user
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
     druid:
       url: jdbc:mysql://192.168.2.176:3306/seata_user?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
       username: root
