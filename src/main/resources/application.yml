@@ -1,0 +1,95 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: seata-user
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://192.168.2.176:3306/seata_user?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
+      username: root
+      password: root123
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      max-active: 20
+      initial-size: 1
+      min-idle: 3
+      max-wait: 60000
+      pool-prepared-statements: true
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      filters: stat,wall,stat,slf4j,default
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: Raye
+        login-password: 123456
+      filter:
+        slf4j:
+          enabled: true
+          statement-create-after-log-enabled: false
+          statement-log-enabled: false
+          statement-executable-sql-log-enable: true
+          statement-log-error-enabled: true
+          result-set-log-enabled: false
+  servlet:
+    multipart:
+      max-file-size: 10MB #单个文件最大为10M
+      max-request-size: 100MB #单次请求文件总数大小为100M
+
+mybatis-plus:
+  type-aliases-package: com.seata.demo.pojo   #自己的实体类地址
+  mapper-locations: classpath:mapper/*.xml
+
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 10000 #单位毫秒
+        read-timeout : 10000 #单位毫秒
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: true
+debug: false
+logging:
+  level:
+    com.alibaba.nacos.client.config.impl: WARN
+    druid:
+      sql:
+        Statement: DEBUG
+nacos:
+  group: SEATA_GROUP
+  namespace: public
+  # 配置中心地址
+  server-addr: 192.168.2.89:8848
+
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: my_test_tx_group
+  enable-auto-data-source-proxy: true
+  config:
+    # 指明配置中心类型
+    type: nacos
+    nacos:
+      server-addr: ${nacos.server-addr}
+      namespace: ${nacos.namespace}
+      group: ${nacos.group}
+      username: "nacos"
+      password: "nacos"
+  registry:
+    # 指明注册中心类型
+    type: nacos
+    nacos:
+      application: seata-server #registry.nacos.application属性，默认seata-server，Server和Client端的值需一致
+      server-addr: ${nacos.server-addr}
+      namespace: ${nacos.namespace}
+      group: ${nacos.group}
+      username: "nacos"
+      password: "nacos"
